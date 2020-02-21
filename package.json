@@ -10,7 +10,7 @@
   "license": "SEE LICENSE IN LICENSE",
   "dependencies": {
     "react-native-webview": "^8.1.1",
-    "react-native-webview-bridge-updated": "^1.0.0"
+    "react-native-webview-bridge": "https://github.com/redefinered/react-native-webview-bridge"
   },
   "peerDependencies": {
     "react": "*",
