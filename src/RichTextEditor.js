@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import WebView from 'react-native-webview';
+import WebViewBridge from 'react-native-webview-bridge-updated';
 import {InjectedMessageHandler} from './WebviewMessageHandler';
 import {actions, messages} from './const';
 import {Modal, View, Text, StyleSheet, TextInput, TouchableOpacity, Platform, PixelRatio, Keyboard, Dimensions} from 'react-native';
@@ -167,7 +167,7 @@ export default class RichTextEditor extends Component {
           console.log('FROM ZSS', message.data);
           break;
         case messages.SCROLL:
-          this.WebView.setNativeProps({contentOffset: {y: message.data}});
+          this.webviewBridge.setNativeProps({contentOffset: {y: message.data}});
           break;
         case messages.TITLE_FOCUSED:
           this.titleFocusHandler && this.titleFocusHandler();
@@ -294,11 +294,11 @@ export default class RichTextEditor extends Component {
     const pageSource = PlatformIOS ? require('./editor.html') : { uri: 'file:///android_asset/editor.html' };
     return (
       <View style={{flex: 1}}>
-        <WebView
+        <WebViewBridge
           {...this.props}
           hideKeyboardAccessoryView={true}
           keyboardDisplayRequiresUserAction={false}
-          ref={(r) => {this.WebView = r}}
+          ref={(r) => {this.webviewBridge = r}}
           onBridgeMessage={(message) => this.onBridgeMessage(message)}
           injectedJavaScript={injectScript}
           source={pageSource}
@@ -325,7 +325,7 @@ export default class RichTextEditor extends Component {
   _sendAction(action, data) {
     let jsonString = JSON.stringify({type: action, data});
     jsonString = this.escapeJSONString(jsonString);
-    this.WebView.sendToBridge(jsonString);
+    this.webviewBridge.sendToBridge(jsonString);
   }
 
   //-------------------------------------------------------------------------------
@@ -466,7 +466,7 @@ export default class RichTextEditor extends Component {
 
   insertImage(attributes) {
     this._sendAction(actions.insertImage, attributes);
-    this.prepareInsert(); //This must be called BEFORE insertImage. But WebView uses a stack :/
+    this.prepareInsert(); //This must be called BEFORE insertImage. But WebViewBridge uses a stack :/
   }
 
   setSubscript() {
